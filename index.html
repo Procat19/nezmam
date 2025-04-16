@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amethyst Control Panel</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <script src="index.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #1a1a2e;
+            color: #f5f5f5;
+            padding: 20px;
+        }
+        h1 {
+            color: #c77dff;
+        }
+        .section {
+            background: #252744;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #7b2cbf;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background-color: #9d4edd;
+        }
+        .plugin {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2e2e4d;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .plugin-actions button {
+            margin-left: 5px;
+        }
+        #serverStatus {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>🛠 Amethyst Control Panel</h1>
+
+    <div class="section">
+        <h2>📡 Server Status: <span id="serverStatus">Checking...</span></h2>
+    </div>
+
+    <div class="section">
+        <h2>📦 Upload File</h2>
+        <input type="text" id="uploadFileName" placeholder="File Name (example.jar)" />
+        <input type="file" id="uploadFile" />
+        <button onclick="uploadFile()">Upload</button>
+    </div>
+
+    <div class="section">
+        <h2>💻 Execute Command</h2>
+        <input type="text" id="commandInput" placeholder="Enter server command..." />
+        <button onclick="executeCommand()">Run</button>
+    </div>
+
+    <div class="section">
+        <h2>⬇️ Download File from GitHub</h2>
+        <input type="text" id="githubURL" placeholder="Raw GitHub URL" />
+        <input type="text" id="githubFileName" placeholder="Save as (e.g. MyPlugin.jar)" />
+        <button onclick="downloadGithubFile()">Download</button>
+    </div>
+
+    <div class="section">
+        <h2>🔌 Plugins</h2>
+        <button onclick="refreshPluginList()">🔄 Refresh Plugin List</button>
+        <div id="pluginList"></div>
+    </div>
+
+    <script>
+        const SERVER_IP = "hypixel.net"; // CHANGE THIS TO YOUR SERVER
+        const SERVER_PORT = 25565;
+        function checkServerStatus() {
+            fetch(`https://api.mcstatus.io/v2/status/java/${SERVER_IP}:${SERVER_PORT}`)
+                .then(res => res.json())
+                .then(data => {
+                    const statusEl = document.getElementById("serverStatus");
+                    if (data && data.online) {
+                        statusEl.innerText = "🟢 Online";
+                        statusEl.style.color = "#4ade80";
+                    } else {
+                        statusEl.innerText = "🔴 Offline";
+                        statusEl.style.color = "#f87171";
+                    }
+                })
+                .catch(() => {
+                    const statusEl = document.getElementById("serverStatus");
+                    statusEl.innerText = "🔴 Offline";
+                    statusEl.style.color = "#f87171";
+                });
+        }
+        checkServerStatus();
+        setInterval(checkServerStatus, 10000);
+    </script>
+</body>
+</html>
